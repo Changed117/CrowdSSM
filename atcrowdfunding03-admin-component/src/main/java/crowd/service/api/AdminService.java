@@ -11,4 +11,7 @@ public interface AdminService {
     public int deleteAdminById(int id);
 
     public List<Admin> queryAll();
+
+    Admin getAdminByLoginAcct(String loginAcct, String userPswd);
+
 }

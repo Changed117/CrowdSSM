@@ -2,6 +2,7 @@ package crowd.mvc.config;
 
 
 import com.Changed.crowd.constat.CrowdConstant;
+import com.Changed.crowd.exception.LoginFailedException;
 import com.Changed.crowd.util.CrowdUitl;
 import com.Changed.crowd.util.ResultEntity;
 import com.google.gson.Gson;
@@ -15,6 +16,12 @@ import java.io.IOException;
 
 @ControllerAdvice
 public class CrowdExceptionResolver {
+
+    @ExceptionHandler(value = LoginFailedException.class)
+    public ModelAndView resolverLoginFailedException(LoginFailedException exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String viewName = "admin-login";
+        return commonResoolve(viewName, exception, request,response);
+    }
 
     @ExceptionHandler(value = NullPointerException.class)
     public ModelAndView resolverNullPointerException(NullPointerException exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
