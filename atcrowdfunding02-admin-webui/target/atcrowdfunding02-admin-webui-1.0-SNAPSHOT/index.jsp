@@ -6,6 +6,7 @@
     <script type="text/javascript" src="jQuery/jquery-2.1.1.min.js"></script>
     <script type="text/javascript">
             $(function () {
+
                 $("#btn3").click(function () {
 
                     var array = [5,8,10];
@@ -83,5 +84,9 @@
 
     <button id="btn3">Send [5,8,10] Three</button>
 
+    <br/>
+    <br/>
+
+    <a href="admin/to/login/page.html">后台登陆页面</a>
 </body>
 </html>

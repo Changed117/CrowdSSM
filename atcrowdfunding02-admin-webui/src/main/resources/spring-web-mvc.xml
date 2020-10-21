@@ -4,8 +4,8 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
        <context:component-scan base-package="crowd.mvc"/>
 
@@ -25,4 +25,19 @@
         </bean>
 
         <mvc:view-controller path="/admin/to/login/page.html" view-name="admin-login"/>
+        <mvc:view-controller path="/admin/to/main/page.html" view-name="admin-main"/>
+
+        <mvc:interceptors>
+            <mvc:interceptor>
+                <!--配置需要拦截的资源-->
+                <mvc:mapping path="/**"/>
+
+                <!--配置不需要拦截的资源-->
+                <mvc:exclude-mapping path="/admin/do/login.html"/>
+                <mvc:exclude-mapping path="/admin/to/login/page.html"/>
+                <mvc:exclude-mapping path="/admin/to/logout/page.html"/>
+                <!--配置拦截器类-->
+                <bean class="crowd.mvc.interceptor.LoginInterceptor"/>
+            </mvc:interceptor>
+        </mvc:interceptors>
 </beans>

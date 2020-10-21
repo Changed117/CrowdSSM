@@ -16,6 +16,13 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @RequestMapping("/admin/to/logout/page.html")
+    public String doLogout(HttpSession session){
+        //退出登录，强制清空session
+        session.invalidate();
+        return "redirect:/admin/to/login/page.html";
+    }
+
     @RequestMapping("/admin/do/login.html")
     public String doLogin(
             @RequestParam("loginAcct") String loginAcct,
@@ -30,6 +37,6 @@ public class AdminController {
         session.setAttribute(CrowdConstant.ATTR_NAME_LOGIN_ADMIN,admin);
 
         //如果账号密码正确返回到登陆成功页面
-        return "admin-main";
+        return "redirect:/admin/to/main/page.html";
     }
 }
