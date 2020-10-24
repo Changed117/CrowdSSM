@@ -49,8 +49,10 @@ public class test {
     public void testTx(){
         ApplicationContext context
                 = new ClassPathXmlApplicationContext("all-Spring-context.xml");
-        AdminService adminServiceImpl = (AdminService)context.getBean("adminService");
-        adminServiceImpl.deleteAdminById(2);
+        AdminMapper adminMapper = (AdminMapper)context.getBean("adminMapper");
+        for (int i = 1; i < 238; i++){
+            adminMapper.insert(new Admin(null, "loginAcct"+i, "userPswd"+i, "userName"+i, "email"+i, null));
+        }
 
     }
 }

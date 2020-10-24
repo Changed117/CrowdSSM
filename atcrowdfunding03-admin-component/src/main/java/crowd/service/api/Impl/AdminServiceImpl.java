@@ -1,18 +1,25 @@
 package crowd.service.api.Impl;
 
 import com.Changed.crowd.constat.CrowdConstant;
+import com.Changed.crowd.exception.LoginAcctAlreadyInUseException;
+import com.Changed.crowd.exception.LoginAcctAlreadyInUseForUpdateException;
 import com.Changed.crowd.exception.LoginFailedException;
 import com.Changed.crowd.util.CrowdUitl;
 import com.atguigu.crowd.entity.Admin;
 import com.atguigu.crowd.entity.AdminExample;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import crowd.mapper.AdminMapper;
 import crowd.service.api.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,6 +73,63 @@ public class AdminServiceImpl implements AdminService {
             return admin;
         }else {
             throw new LoginFailedException(CrowdConstant.MESSAGE_LOGIN_FAILED);
+        }
+    }
+
+    @Override
+    public PageInfo<Admin> getPageInfo(String keyword, Integer pageNum, Integer pageSize) {
+        // 1.调用PageHelper开启分页功能
+        PageHelper.startPage(pageNum, pageSize);
+
+        // 2.调用方法查询数据
+        List<Admin> list = adminMapper.selectAdminByKeyword(keyword);
+
+        // 3.数据封装至PageInfo
+        return new PageInfo<>(list);
+    }
+
+    @Override
+    public void remove(Integer adminId) {
+        adminMapper.deleteByPrimaryKey(adminId);
+    }
+
+    @Override
+    public void saveAdmin(Admin admin) {
+        //将密码加密
+        String userPswd = admin.getUserPswd();
+        userPswd = CrowdUitl.md5(userPswd);
+        admin.setUserPswd(userPswd);
+
+        // 设置日期
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String createTime = format.format(date);
+        admin.setCreateTime(createTime);
+
+        try {
+            adminMapper.insert(admin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof DuplicateKeyException){
+
+                throw new LoginAcctAlreadyInUseException(CrowdConstant.MESSAGE_LOGIN_ACCT_ALREADY_IN_USE);
+            }
+
+        }
+
+
+    }
+
+    @Override
+    public void update(Admin admin) {
+        // Selective表示有选择地更新
+        try {
+            adminMapper.updateByPrimaryKeySelective(admin);
+        }catch (Exception e){
+            if(e instanceof DuplicateKeyException){
+
+                throw new LoginAcctAlreadyInUseForUpdateException(CrowdConstant.MESSAGE_LOGIN_ACCT_ALREADY_IN_USE);
+            }
         }
     }
 }
