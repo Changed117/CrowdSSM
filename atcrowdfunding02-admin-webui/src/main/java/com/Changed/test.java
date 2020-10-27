@@ -1,7 +1,9 @@
 package com.Changed;
 
 import com.atguigu.crowd.entity.Admin;
+import com.atguigu.crowd.entity.Role;
 import crowd.mapper.AdminMapper;
+import crowd.mapper.RoleMapper;
 import crowd.service.api.AdminService;
 import crowd.service.api.Impl.AdminServiceImpl;
 import org.junit.Test;
@@ -52,6 +54,17 @@ public class test {
         AdminMapper adminMapper = (AdminMapper)context.getBean("adminMapper");
         for (int i = 1; i < 238; i++){
             adminMapper.insert(new Admin(null, "loginAcct"+i, "userPswd"+i, "userName"+i, "email"+i, null));
+        }
+
+    }
+
+    @Test
+    public void testRole(){
+        ApplicationContext context
+                = new ClassPathXmlApplicationContext("all-Spring-context.xml");
+        RoleMapper roleMapper = (RoleMapper)context.getBean("roleMapper");
+        for (int i = 1; i < 238; i++){
+            roleMapper.insert(new Role(null,"name"+i));
         }
 
     }
